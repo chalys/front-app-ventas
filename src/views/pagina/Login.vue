@@ -80,11 +80,12 @@ export default {
       );
       console.log(data);
       if (!data.error) {
-        this.text = "Bienvenido Usuario"
-        this.snackbar = true
-        this.color = "green"
+        this.text = "Bienvenido Usuario";
+        this.snackbar = true;
+        this.color = "green";
+
         //redireccionar a otra ruta
-        this.$router.push("admin")
+        this.$router.push("admin");
       } else {
         this.text = data.mensaje;
         this.snackbar = true;

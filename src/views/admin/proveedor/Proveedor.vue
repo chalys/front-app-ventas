@@ -68,12 +68,16 @@
               </v-btn>
             </v-card-actions>
           </v-card>
+          <!--                               <v-progress-circular
+          indeterminate
+          color="primary"
+        ></v-progress-circular> -->
         </v-dialog>
 
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
             <v-card-title class="text-h5"
-              >Esta seguro d eeliminar el Proveedor?</v-card-title
+              >Esta seguro de eliminar el Proveedor?</v-card-title
             >
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -99,7 +103,6 @@
 </template>
 
 <script>
-
 import * as provServicio from "./../../../services/proveedorService.js";
 
 export default {
@@ -170,12 +173,17 @@ export default {
     },
 
     async guardar() {
+      this.estado_boton = true;
+
       if (this.editedIndex > -1) {
+        let prov = this.list_proveedores[this.editedIndex];
+        await provServicio.modificar(this.proveedor, prov.id);
         Object.assign(this.list_proveedores[this.editedIndex], this.proveedor);
       } else {
-        await provServicio.guardar(this.proveedor)
+        await provServicio.guardar(this.proveedor);
         this.list_proveedores.push(this.proveedor);
       }
+      this.estado_boton = false;
       this.cerrar();
     },
 
@@ -184,15 +192,22 @@ export default {
       this.proveedor = Object.assign({}, item);
       this.dialog = true;
     },
+
     eliminarProveedor(item) {
       this.editedIndex = this.list_proveedores.indexOf(item);
       this.proveedor = Object.assign({}, item);
       this.dialogDelete = true;
     },
 
-    deleteItemConfirm() {
-      this.list_proveedores.splice(this.editedIndex, 1);
-      this.closeDelete();
+    async deleteItemConfirm() {
+      try {
+        let prov = this.list_proveedores[this.editedIndex]; //Posisición a eliminar
+        let res = await provServicio.eliminar(prov.id);
+        if (!res.error) {
+          this.list_proveedores.splice(this.editedIndex, 1);
+        }
+        this.closeDelete();
+      } catch (error) {}
     },
 
     closeDelete() {
@@ -202,7 +217,15 @@ export default {
         this.editedIndex = -1;
       });
     },
-    /*     editItem(item) {
+    /* 
+        async eliminar(posicion, id) {
+      if (confirm("Esta seguro de eliminar la categoria?")) {
+        await catService.eliminar(id);
+        this.lista_categorias.splice(posicion, 1);
+    
+    
+    
+    editItem(item) {
       this.editedIndex = this.desserts.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
@@ -211,5 +234,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.v-progress-circular {
+  margin: 1rem;
+}
 </style>

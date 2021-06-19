@@ -1,16 +1,25 @@
 <template>
-  <div>
-    <h1> PLANTILLA ADMIN </h1>
-    <router-view></router-view>
-  </div>
+  <v-app>
+    <Navegacion></Navegacion>
+    <v-main>
+      <router-view></router-view>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-  export default {
-
+import Navegacion from "./../navegacion/Navegacion.vue"
+export default {
+  components: {
+    Navegacion
+  },
+  data() {
+    return {
+      drawer: null,
+    }
   }
+}
 </script>
 
 <style>
-
 </style>
